@@ -1,24 +1,33 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import { Login } from './pages/Account/Login';
+import PrivateRoute from './components/PrivateRoute';
+
+import './styles/sb-admin-2.min.css';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+} from "react-router-dom";
+import { Admin } from './pages/Admin/Admin';
 
 function App() {
+  const isAuthenticated = true; // Replace with actual authentication logic
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="App" id="wrapper">
+      <Router>
+        <Routes>
+          <Route path="/" element={<Admin />} /> {/* Route for the root path */}
+          <Route path="/admin" element={<PrivateRoute isAuthenticated={true}><Admin /></PrivateRoute>} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/admin" element={
+            <PrivateRoute isAuthenticated={isAuthenticated}>
+              <Admin />
+            </PrivateRoute>
+          } />
+        </Routes>
+      </Router>
     </div>
   );
 }
