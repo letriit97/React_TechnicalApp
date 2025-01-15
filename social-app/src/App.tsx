@@ -1,31 +1,19 @@
 import React from 'react';
 import './App.css';
 import { Login } from './pages/Account/Login';
-import PrivateRoute from './components/PrivateRoute';
-
 import './styles/sb-admin-2.min.css';
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Admin } from './pages/Admin/Admin';
+import PrivateRoute from './components/PrivateRoute';
+import AccountRoute from './components/AccountRoute';
 
 function App() {
-  const isAuthenticated = true; // Replace with actual authentication logic
-
   return (
     <div className="App" id="wrapper">
       <Router>
         <Routes>
-          <Route path="/" element={<Admin />} /> {/* Route for the root path */}
-          <Route path="/admin" element={<PrivateRoute isAuthenticated={true}><Admin /></PrivateRoute>} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/admin" element={
-            <PrivateRoute isAuthenticated={isAuthenticated}>
-              <Admin />
-            </PrivateRoute>
-          } />
+          <Route path="/dang-nhap" element={<AccountRoute element={<Login />} /> } />
+          <Route path="/" element={<PrivateRoute element={<Admin />} />} />
         </Routes>
       </Router>
     </div>

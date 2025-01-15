@@ -1,7 +1,15 @@
-import React from 'react'
+import React from 'react';
+import { useSelector } from 'react-redux';
+import { Navigate } from 'react-router-dom';
+import { AppState } from '../store';
+import { AccountState } from '../store/account/types';
 
-export const AccountRoute = () => {
-  return (
-    <div>AccountRoute</div>
-  )
-}
+
+const AccountRoute = ({ element }) => {
+  const account: AccountState = useSelector((state: AppState) => state.account);
+  console.log("AccountRoute - account:", account)
+  return account.token ? <Navigate to="/" /> : element;
+};
+
+
+export default AccountRoute;

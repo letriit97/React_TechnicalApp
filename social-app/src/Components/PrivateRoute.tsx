@@ -1,13 +1,19 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
+import type { AccountState } from '../store/account/types';
+import type { AppState } from '../store';
+import { useSelector } from 'react-redux';
 
-interface PrivateRouteProps {
-    isAuthenticated: boolean;
-    children: React.ReactNode;
-}
 
-const PrivateRoute: React.FC<PrivateRouteProps> = ({ children, isAuthenticated }) => {
-    return isAuthenticated ? <>{children}</> : <Navigate to="/login" />;
+/**
+ * Kiểm tra xem người dùng đã đăng nhập chưa, nếu chưa thì chuyển hướng về trang đăng nhập
+ * @param {*} { element }
+ * @return {*} 
+ */
+const PrivateRoute = ({ element }) => {
+    console.log("PrivateRoute - element:", element)
+    const account: AccountState = useSelector((state: AppState) => state.account);
+    return account.token ? element : <Navigate to="/dang-nhap" />;
 };
 
 export default PrivateRoute;
