@@ -21,3 +21,6 @@
 - yarn add @types/history
 
 - yarn add react-dotenv [File config cấu hình]
+
+## 11. Persisted Store 
+- Thêm packge, giữ store

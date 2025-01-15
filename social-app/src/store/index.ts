@@ -1,19 +1,36 @@
-import { combineReducers, } from "redux";
-import accountReducer from "./account/reducers";
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
+import accountReducer from './account/reducers';
 
-import { configureStore } from '@reduxjs/toolkit';
+// Define the persist configuration
+const persistConfig: PersistConfig<any> = {
+    key: 'root',
+    storage,
+    whitelist: ['account'], // Add reducers you want to persist here
+};
 
-// Tạo Route mới cho trang Admin
+// Combine your reducers
 const rootReducer = combineReducers({
     account: accountReducer,
+    // Add other reducers here
 });
 
+// Create a persisted reducer
+const persistedReducer = persistReducer(persistConfig, rootReducer);
+
+// Configure the store
 const store = configureStore({
-    reducer: rootReducer,
+    reducer: persistedReducer,
     // Add any middleware if needed
 });
 
+// Define the AppState and AppDispatch types
 export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 
-export default store;
+// Export the store and persistor
+export default () => {
+    let persistor = persistStore(store);
+    return { store, persistor };
+};
