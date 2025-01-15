@@ -16,3 +16,8 @@
 
 - yarn add react-router-dom@5.2.0
 - yarn add @types/react-router-dom@5.1.7
+
+- yarn add history
+- yarn add @types/history
+
+- yarn add react-dotenv [File config cấu hình]

@@ -1,3 +1,5 @@
+import type { AuthenticationResponse } from "../../models/authentication/Authentication";
+
 export const LOGIN_REQUEST = 'LOGIN_REQUEST';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAILURE = 'LOGIN_FAILURE';
@@ -18,7 +20,7 @@ export interface AuthenticationUser {
 interface LoginRequest {
     type: typeof LOGIN_REQUEST;
     payload: {
-        email: string;
+        username: string;
         password: string;
     };
 }
@@ -26,7 +28,7 @@ interface LoginRequest {
 interface LoginSuccess {
     type: typeof LOGIN_SUCCESS;
     payload: {
-        user: AuthenticationUser;
+        data : AuthenticationResponse;
         token: string;
     };
 }
@@ -43,7 +45,7 @@ interface LogOut {
 }
 
 export interface AccountState {
-    user: AuthenticationUser | null;
+    accountInfo: AuthenticationResponse | null;
     loading: boolean;
     error: string | null;
     token: string | null;

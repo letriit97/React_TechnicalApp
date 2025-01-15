@@ -1,7 +1,7 @@
 import { LOG_OUT, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, AccountActionTypes, AccountState } from "./types";
 
 const initialState: AccountState = {
-    user: null,
+    accountInfo: null,
     loading: false,
     error: null,
     token: null,
@@ -22,7 +22,7 @@ const accountReducer = (
             return {
                 ...state,
                 loading: false,
-                user: action.payload.user,
+                accountInfo: action.payload.data,
                 token: action.payload.token,
             };
         case LOGIN_FAILURE:
@@ -34,7 +34,7 @@ const accountReducer = (
         case LOG_OUT:
             return {
                 ...state,
-                user: null,
+                accountInfo: null,
                 token: null,
                 error: null
             };

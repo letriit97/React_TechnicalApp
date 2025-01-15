@@ -11,7 +11,6 @@ import { useSelector } from 'react-redux';
  * @return {*} 
  */
 const PrivateRoute = ({ element }) => {
-    console.log("PrivateRoute - element:", element)
     const account: AccountState = useSelector((state: AppState) => state.account);
     return account.token ? element : <Navigate to="/dang-nhap" />;
 };
