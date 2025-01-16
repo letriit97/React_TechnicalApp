@@ -7,7 +7,8 @@ import { AccountState } from '../store/account/types';
 
 const AccountRoute = ({ element }) => {
   const account: AccountState = useSelector((state: AppState) => state.account);
-  return account.token ? <Navigate to="/" /> : element;
+  console.log("AccountRoute - account:", account)
+  return account?.token != null ? <Navigate to="/" /> : element;
 };
 
 

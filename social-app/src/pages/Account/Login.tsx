@@ -4,12 +4,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store';
 import { useLocation } from 'react-router';
 import { login, logout } from '../../store/account/actions';
-import { AccountActionTypes } from '../../store/account/types';
 
 export const Login = () => {
     const [inputs, setInputs] = useState<LoginRequest>({
         username: 'Administrator',
-        password: '',
+        password: 'Admin@123',
         isRememberMe: false
     });
 
@@ -26,7 +25,7 @@ export const Login = () => {
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        setInputs(inputs => ({ ...inputs, [name]: value }));
+        setInputs(inputs => ({ ...inputs, name: value }));
     }
 
     //  Set submitted to true
@@ -35,8 +34,7 @@ export const Login = () => {
         setSubmitted(true);
         if (username && password) {
             // get return url from location state or default to home page
-            const { returnUrl } = location.state || { from: { pathname: "/" } };
-
+            const { returnUrl = "/" } = location.state || {};
             dispatch(login(inputs, returnUrl));
         }
     }
@@ -59,11 +57,11 @@ export const Login = () => {
                                         <form className="user" onSubmit={handleSubmit}>
                                             <div className="form-group">
                                                 <input type="text" className={`form-control form-control-user ${submitted && !username ? 'is-invalid' : ''}`}
-                                                        name='username' onChange={handleChange} placeholder="Enter Email Address..." />
+                                                    name='username' onChange={handleChange} placeholder="Enter Email Address..." />
                                             </div>
                                             <div className="form-group">
                                                 <input type="password" className={`form-control form-control-user ${submitted && !password ? 'is-invalid' : ''}`}
-                                                        name='password' onChange={handleChange} placeholder="Password" />
+                                                    name='password' onChange={handleChange} placeholder="Password" />
                                             </div>
                                             {/* <div className="form-group">
                                                 <div className="custom-control custom-checkbox small">

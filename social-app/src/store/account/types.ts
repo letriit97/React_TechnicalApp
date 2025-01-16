@@ -1,9 +1,9 @@
-import type { AuthenticationResponse } from "../../models/authentication/Authentication";
+import type { AccountInformation, AuthenticationResponse } from "../../models/authentication/Authentication";
 
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILURE = 'LOGIN_FAILURE';
-export const LOG_OUT = 'LOG_OUT';
+ const LOGIN_REQUEST = 'LOGIN_REQUEST';
+ const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
+ const LOGIN_FAILURE = 'LOGIN_FAILURE';
+ const LOG_OUT = 'LOG_OUT';
 
 export type AccountActionTypes = LoginRequest | LoginSuccess | LoginFailure | LogOut;
 
@@ -45,10 +45,10 @@ interface LogOut {
 }
 
 export interface AccountState {
-    accountInfo: AuthenticationResponse | null;
+    accountInfo?: AccountInformation | null;
     loading: boolean;
     error: string | null;
-    token: string | null;
+    token?: string | null;
 }
 
 

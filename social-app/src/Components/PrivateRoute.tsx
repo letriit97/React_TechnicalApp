@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
-import type { AccountState } from '../store/account/types';
-import type { AppState } from '../store';
+import { AccountState } from '../store/account/types';
+import { AppState } from '../store';
 import { useSelector } from 'react-redux';
 
 

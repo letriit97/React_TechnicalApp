@@ -1,23 +1,23 @@
 import { Dispatch } from "react"
-import { LOGIN_REQUEST, AccountActionTypes, LOGIN_SUCCESS, LOGIN_FAILURE, LOG_OUT } from "./types"
-import { LoginRequest } from "../../models/authentication/Authentication"
+import { LoginRequest, AuthenticationResponse } from "../../models/authentication/Authentication"
 import { authenticationService } from "../../services/idnex"
 import { history } from "../../helpers"
+import { loginRequest, loginSuccess, loginFailure, logOut } from "./reducers"
 
 export const login = (model: LoginRequest, returnUrl: string) => {
-    return (dispatch: Dispatch<AccountActionTypes>) => {
+    return (dispatch: Dispatch<any>) => {
         dispatch({
-            type: LOGIN_REQUEST,
-            payload: {
+            type: loginRequest,
+            payload: <LoginRequest>{
                 username: model.username,
                 password: model.password
             }
         });
 
         authenticationService.login(model).then(
-            response => {
+            (response: AuthenticationResponse) => {
                 dispatch({
-                    type: LOGIN_SUCCESS,
+                    type: loginSuccess,
                     payload: {
                         data: response,
                         token: response.token
@@ -29,7 +29,7 @@ export const login = (model: LoginRequest, returnUrl: string) => {
             },
             error => {
                 dispatch({
-                    type: LOGIN_FAILURE,
+                    type: loginFailure,
                     payload: {
                         error: error
                     }
@@ -39,6 +39,10 @@ export const login = (model: LoginRequest, returnUrl: string) => {
     }
 }
 
-export const logout = (): AccountActionTypes => {
-    return { type: LOG_OUT }
+export const logout = () => {
+    return (dispatch: Dispatch<any>) => {
+        dispatch({
+            type: logOut
+        });
+    }
 }

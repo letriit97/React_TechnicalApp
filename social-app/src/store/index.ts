@@ -1,36 +1,50 @@
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
-import { persistStore, persistReducer, PersistConfig } from 'redux-persist';
-import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
 import accountReducer from './account/reducers';
 
-// Define the persist configuration
-const persistConfig: PersistConfig<any> = {
+import {
+    persistStore,
+    persistReducer,
+    PersistConfig,
+    FLUSH,
+    PAUSE,
+    PERSIST,
+    PURGE,
+    REGISTER,
+    REHYDRATE,
+} from 'redux-persist';
+
+import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
+import { combineReducers, configureStore } from '@reduxjs/toolkit';
+
+// Cấu hình redux-persist
+const persistConfig = {
     key: 'root',
+    version: 1,
     storage,
     whitelist: ['account'], // Add reducers you want to persist here
 };
+const reduxPersistActions = [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER];
 
-// Combine your reducers
+// Combine your reducers 
 const rootReducer = combineReducers({
     account: accountReducer,
-    // Add other reducers here
+    // Add other reducers heremiddleware: (getDefaultMiddleware) =>
+
 });
 
 // Create a persisted reducer
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 // Configure the store
-const store = configureStore({
+export const store = configureStore({
     reducer: persistedReducer,
-    // Add any middleware if needed
+    middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+            serializableCheck: {
+                ignoredActions: [...reduxPersistActions],
+            },
+        }),
 });
 
 // Define the AppState and AppDispatch types
 export type AppState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
-
-// Export the store and persistor
-export default () => {
-    let persistor = persistStore(store);
-    return { store, persistor };
-};

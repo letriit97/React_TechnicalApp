@@ -1,45 +1,51 @@
-import { LOG_OUT, LOGIN_FAILURE, LOGIN_REQUEST, LOGIN_SUCCESS, AccountActionTypes, AccountState } from "./types";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { AccountState } from "./types";
+import { AuthenticationResponse } from "../../models/authentication/Authentication";
 
+// 1. Init state
 const initialState: AccountState = {
-    accountInfo: null,
+    // accountInfo: null,
     loading: false,
     error: null,
     token: null,
 }
 
-const accountReducer = (
-    state: AccountState = initialState,
-    action: AccountActionTypes
-): AccountState => {
-    switch (action.type) {
-        case LOGIN_REQUEST:
+export const accountSlice = createSlice({
+    name: 'account',
+    initialState,
+    reducers: {
+        loginRequest: state => {
             return {
                 ...state,
                 loading: true,
                 error: null,
             };
-        case LOGIN_SUCCESS:
+        },
+        loginSuccess: (state, action: PayloadAction<AuthenticationResponse>) => {
             return {
                 ...state,
                 loading: false,
-                accountInfo: action.payload.data,
+                accountInfo: action.payload.accountInfo,
                 token: action.payload.token,
             };
-        case LOGIN_FAILURE:
+        },
+        loginFailure: (state, action) => {
             return {
                 ...state,
                 loading: false,
                 error: action.payload.error,
             };
-        case LOG_OUT:
+        },
+        logOut: state => {
             return {
                 ...state,
                 accountInfo: null,
                 token: null,
                 error: null
-            };
-        default:
-            return state;
+            }
+        }
     }
-}
-export default accountReducer;
+});
+
+export const { loginRequest, loginSuccess, loginFailure, logOut } = accountSlice.actions;
+export default accountSlice.reducer;
