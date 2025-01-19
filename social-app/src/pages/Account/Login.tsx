@@ -4,40 +4,51 @@ import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store';
 import { useLocation } from 'react-router';
 import { login, logout } from '../../store/account/actions';
+import { decrement, increment } from '../../store/CountReducer';
+import { useForm, SubmitHandler } from 'react-hook-form'
 
 export const Login = () => {
-    const [inputs, setInputs] = useState<LoginRequest>({
-        username: 'Administrator',
-        password: 'Admin@123',
-        isRememberMe: false
-    });
+    const loading = useSelector<AppState, boolean>((state) => state.account.loading);
+    let error = useSelector<AppState, string | null>((state) => state.account.error);
+    const count = useSelector<AppState, number>((state) => state.counter.count);
 
-    const [submitted, setSubmitted] = useState(false);
-    const loading = useSelector<AppState>((state) => state.account.loading);
-    const { username, password, isRememberMe } = inputs;
     const dispatch = useDispatch<any>();
     const location = useLocation();
 
+    const { register, handleSubmit, formState: { isSubmitted } } = useForm<LoginRequest>({
+        defaultValues: {
+            username: 'Administrator',
+            password: 'Admin@'
+        }
+    });
+    const onSubmit: SubmitHandler<LoginRequest> = (data: LoginRequest) => {
+        console.log(data);
+        // get return url from location state or default to home page
+        const { returnUrl = "/" } = location.state || {};
+        console.log("Login - returnUrl:", returnUrl)
+        dispatch(login(data, returnUrl));
+    }
+
     useEffect(() => {
-        dispatch(logout());
+        error = null;
     }, []);
 
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setInputs(inputs => ({ ...inputs, name: value }));
-    }
+    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     const { name, value } = e.target;
+    //     setInputs(inputs => ({ ...inputs, [name]: value }));
+    // }
 
-    //  Set submitted to true
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        setSubmitted(true);
-        if (username && password) {
-            // get return url from location state or default to home page
-            const { returnUrl = "/" } = location.state || {};
-            dispatch(login(inputs, returnUrl));
-        }
-    }
+    // //  Set submitted to true
+    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    //     e.preventDefault();
+    //     setSubmitted(true);
+    //     if (username && password) {
+    //         // get return url from location state or default to home page
+    //         const { returnUrl = "/" } = location.state || {};
+    //         dispatch(login(inputs, returnUrl));
+    //     }
+    // }
 
     return (
         <div className="container">
@@ -52,16 +63,27 @@ export const Login = () => {
                                 <div className="col-lg-6">
                                     <div className="p-5">
                                         <div className="text-center">
-                                            <h1 className="h4 text-gray-900 mb-4">Welcome Back!</h1>
+                                            <h1 className="h4 text-gray-900 mb-4">Welcome Back! {count} </h1>
+                                            <button onClick={() => dispatch(increment())}> Tăng </button>
+                                            <button onClick={() => dispatch(decrement())}> Giảm </button>
                                         </div>
-                                        <form className="user" onSubmit={handleSubmit}>
+                                        <form className="user" onSubmit={handleSubmit(onSubmit)}>
                                             <div className="form-group">
-                                                <input type="text" className={`form-control form-control-user ${submitted && !username ? 'is-invalid' : ''}`}
-                                                    name='username' onChange={handleChange} placeholder="Enter Email Address..." />
+                                                <input
+                                                    {...register('username', {
+                                                        required: true
+                                                    })
+                                                    }
+                                                    type="text" className={`form-control form-control-user ${isSubmitted && !register('username') ? 'is-invalid' : ''}`}
+                                                    name='username' placeholder="Enter Email Address..." />
                                             </div>
                                             <div className="form-group">
-                                                <input type="password" className={`form-control form-control-user ${submitted && !password ? 'is-invalid' : ''}`}
-                                                    name='password' onChange={handleChange} placeholder="Password" />
+                                                <input type="password"
+                                                    {...register('password',
+                                                        { required: true })
+                                                    }
+                                                    className={`form-control form-control-user ${isSubmitted && !register('password') ? 'is-invalid' : ''}`}
+                                                    name='password' placeholder="Password" />
                                             </div>
                                             {/* <div className="form-group">
                                                 <div className="custom-control custom-checkbox small">
@@ -71,7 +93,8 @@ export const Login = () => {
                                                     </label>
                                                 </div>
                                             </div> */}
-                                            <button className="btn btn-primary btn-user btn-block" type="submit">
+                                            {error && <div className="alert alert-danger" role="alert">{error}</div>}
+                                            <button className="btn btn-primary btn-user btn-block" type="submit" disabled={loading}>
                                                 {loading && <span className="spinner-border spinner-border-sm mr-1"></span>}
                                                 Đăng nhập
                                             </button>

@@ -1,9 +1,7 @@
 import accountReducer from './account/reducers';
-
+import countReducer from './CountReducer';
 import {
-    persistStore,
     persistReducer,
-    PersistConfig,
     FLUSH,
     PAUSE,
     PERSIST,
@@ -13,38 +11,48 @@ import {
 } from 'redux-persist';
 
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
-import { combineReducers, configureStore } from '@reduxjs/toolkit';
+import { combineReducers, configureStore, Action, ThunkAction } from '@reduxjs/toolkit';
 
 // Cấu hình redux-persist
 const persistConfig = {
-    key: 'root',
+    key: "root",
     version: 1,
     storage,
     whitelist: ['account'], // Add reducers you want to persist here
 };
-const reduxPersistActions = [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER];
+const reduxPersistActions = [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, "account/logout"];
 
 // Combine your reducers 
-const rootReducer = combineReducers({
+const reducer = combineReducers({
     account: accountReducer,
+    counter: countReducer,
     // Add other reducers heremiddleware: (getDefaultMiddleware) =>
 
 });
 
 // Create a persisted reducer
-const persistedReducer = persistReducer(persistConfig, rootReducer);
+const persistedReducer = persistReducer(persistConfig, reducer);
 
 // Configure the store
+
+export const reduxStore = configureStore({
+    reducer: {
+        account: accountReducer,
+        counter: countReducer,
+    }
+});
+
 export const store = configureStore({
     reducer: persistedReducer,
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({
             serializableCheck: {
-                ignoredActions: [...reduxPersistActions],
+                ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE']
             },
         }),
 });
 
 // Define the AppState and AppDispatch types
-export type AppState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
+export type AppState = ReturnType<typeof reduxStore.getState>;
+export type AppDispatch = typeof reduxStore.dispatch;
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppState, unknown, Action<string>>;

@@ -4,8 +4,11 @@ import { authenticationService } from "../../services/idnex"
 import { history } from "../../helpers"
 import { loginRequest, loginSuccess, loginFailure, logOut } from "./reducers"
 
+// Redux Thunk Middleware xử lí logic bất đồng bộ
 export const login = (model: LoginRequest, returnUrl: string) => {
     return (dispatch: Dispatch<any>) => {
+        
+        // Ghi nhận trạng thái đang đăng nhập [trong store]
         dispatch({
             type: loginRequest,
             payload: <LoginRequest>{
