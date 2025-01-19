@@ -43,6 +43,7 @@ export interface LoginRequest {
     username: string;
     password: string;
     isRememberMe: boolean;
+    returnUrl?: string | null;
 }
 
 export interface ForgetPasswordRequest {

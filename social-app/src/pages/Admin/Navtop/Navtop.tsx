@@ -1,13 +1,17 @@
 import React, { useState } from 'react'
-import { logout } from '../../../store/account/actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { Dispatch } from 'redux';
+import { fetch_Logout } from '../../../store/account/reducers';
+import { AppState } from '../../../store';
+import { AccountInformation } from '../../../models/authentication/Authentication';
+import env from 'react-dotenv';
 
 export const Navtop = () => {
     const [isToggle, setIsToggle] = useState(false);
     const dispatch: Dispatch<any> = useDispatch();
 
-
+    // Lấy thông tin cá nhân của User đăng nhập
+    const user: AccountInformation = useSelector((state: AppState) => state.account.accountInfo);
 
     return (
         <nav className="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
@@ -162,8 +166,8 @@ export const Navtop = () => {
                         data-toggle="dropdown" aria-haspopup="true"
                         aria-expanded="false"
                         onClick={() => setIsToggle(!isToggle)}>
-                        <span className="mr-2 d-none d-lg-inline text-gray-600 small">Douglas McGee</span>
-                        <img className="img-profile rounded-circle" src="img/undraw_profile.svg" />
+                        <span className="mr-2 d-none d-lg-inline text-gray-600 small"> {user.fullName} </span>
+                        <img className="img-profile rounded-circle" src={env.API_URL + user.avatar} />
                     </a>
                     {/* Dropdown - User Information */}
                     <div className={"dropdown-menu dropdown-menu-right shadow animated--grow-in" + (isToggle ? ' show' : '')} aria-labelledby="userDropdown">
@@ -177,7 +181,7 @@ export const Navtop = () => {
                         </a>
                         <div className="dropdown-divider" />
                         <a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal"
-                            onClick={() => dispatch(logout())}>
+                            onClick={() => dispatch(fetch_Logout())}>
                             <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400" />
                             Đăng xuất
                         </a>

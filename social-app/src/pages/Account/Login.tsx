@@ -3,52 +3,31 @@ import { LoginRequest } from '../../models/authentication/Authentication';
 import { useSelector, useDispatch } from 'react-redux';
 import { AppState } from '../../store';
 import { useLocation } from 'react-router';
-import { login, logout } from '../../store/account/actions';
-import { decrement, increment } from '../../store/CountReducer';
 import { useForm, SubmitHandler } from 'react-hook-form'
+import { fetch_Login } from '../../store/account/reducers';
 
 export const Login = () => {
     const loading = useSelector<AppState, boolean>((state) => state.account.loading);
     let error = useSelector<AppState, string | null>((state) => state.account.error);
-    const count = useSelector<AppState, number>((state) => state.counter.count);
-
     const dispatch = useDispatch<any>();
     const location = useLocation();
 
     const { register, handleSubmit, formState: { isSubmitted } } = useForm<LoginRequest>({
         defaultValues: {
-            username: 'Administrator',
-            password: 'Admin@'
+            username: 'lmcuong1967@gmail.com',
+            password: 'Technical@123456'
         }
     });
     const onSubmit: SubmitHandler<LoginRequest> = (data: LoginRequest) => {
         console.log(data);
         // get return url from location state or default to home page
         const { returnUrl = "/" } = location.state || {};
-        console.log("Login - returnUrl:", returnUrl)
-        dispatch(login(data, returnUrl));
+        dispatch(fetch_Login( {...data, returnUrl: returnUrl} ));
     }
 
     useEffect(() => {
         error = null;
     }, []);
-
-
-    // const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     const { name, value } = e.target;
-    //     setInputs(inputs => ({ ...inputs, [name]: value }));
-    // }
-
-    // //  Set submitted to true
-    // const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    //     e.preventDefault();
-    //     setSubmitted(true);
-    //     if (username && password) {
-    //         // get return url from location state or default to home page
-    //         const { returnUrl = "/" } = location.state || {};
-    //         dispatch(login(inputs, returnUrl));
-    //     }
-    // }
 
     return (
         <div className="container">
@@ -63,9 +42,7 @@ export const Login = () => {
                                 <div className="col-lg-6">
                                     <div className="p-5">
                                         <div className="text-center">
-                                            <h1 className="h4 text-gray-900 mb-4">Welcome Back! {count} </h1>
-                                            <button onClick={() => dispatch(increment())}> Tăng </button>
-                                            <button onClick={() => dispatch(decrement())}> Giảm </button>
+                                            <h1 className="h4 text-gray-900 mb-4">Welcome Back!  </h1>
                                         </div>
                                         <form className="user" onSubmit={handleSubmit(onSubmit)}>
                                             <div className="form-group">

@@ -1,5 +1,4 @@
 import accountReducer from './account/reducers';
-import countReducer from './CountReducer';
 import {
     persistReducer,
     FLUSH,
@@ -25,7 +24,6 @@ const reduxPersistActions = [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, 
 // Combine your reducers 
 const reducer = combineReducers({
     account: accountReducer,
-    counter: countReducer,
     // Add other reducers heremiddleware: (getDefaultMiddleware) =>
 
 });
@@ -38,7 +36,6 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 export const reduxStore = configureStore({
     reducer: {
         account: accountReducer,
-        counter: countReducer,
     }
 });
 
