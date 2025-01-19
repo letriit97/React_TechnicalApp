@@ -73,7 +73,7 @@ export const Login = () => {
                                             {error && <div className="alert alert-danger" role="alert">{error}</div>}
                                             <button className="btn btn-primary btn-user btn-block" type="submit" disabled={loading}>
                                                 {loading && <span className="spinner-border spinner-border-sm mr-1"></span>}
-                                                Đăng nhập
+                                                {loading ? 'Đang đăng nhập....' : ' Đăng nhập'}
                                             </button>
                                         </form>
                                     </div>

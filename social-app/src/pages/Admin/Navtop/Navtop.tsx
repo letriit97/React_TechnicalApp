@@ -167,7 +167,7 @@ export const Navtop = () => {
                         aria-expanded="false"
                         onClick={() => setIsToggle(!isToggle)}>
                         <span className="mr-2 d-none d-lg-inline text-gray-600 small"> {user.fullName} </span>
-                        <img className="img-profile rounded-circle" src={env.API_URL + user.avatar} />
+                        <img className="img-profile rounded-circle" src={user.avatar ? env.API_URL + user.avatar : 'img/default_avatar.png'} />
                     </a>
                     {/* Dropdown - User Information */}
                     <div className={"dropdown-menu dropdown-menu-right shadow animated--grow-in" + (isToggle ? ' show' : '')} aria-labelledby="userDropdown">
