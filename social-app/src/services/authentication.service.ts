@@ -1,53 +1,37 @@
-import env from 'react-dotenv'; // Adjust the import path as necessary
 import { LoginRequest, AuthenticationResponse } from '../models/authentication/Authentication'; // Adjust the import path as necessary
 import { BaseResult } from '../models/BaseModel';
+import api, { LOCAL_STORAGE } from '../helpers/api';
 
-const login = (model: LoginRequest): Promise<AuthenticationResponse> => {
-    
-    const request = {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(model),
-    };
-    
-    return fetch(`${env.API_URL}api/Authentication/login`, request)
-        .then(handleResponse)
-        .then((data: BaseResult<AuthenticationResponse>) => {
-            if (data.success) {
-                localStorage.setItem('react_token', data.result.token);
-                return data.result;
+const login = async (model: LoginRequest): Promise<AuthenticationResponse> => {
+
+    return await api.post('api/Authentication/login', model)
+        .then((response) => {
+            if (response.data.success) {
+                localStorage.setItem(LOCAL_STORAGE.TOKEN, response.data.result.token);
+                return response.data.result;
             } else {
-                return Promise.reject(data.message);
+                return Promise.reject(response.data.message);
             }
-        }
-    ); 
+        });
 };
 
-const handleResponse = (response: any) => {
-    return response.text().then((text: string) => {
-        const data = text && JSON.parse(text);
-        if (!response.ok) 
-        {
-            if (response.status === 401) {
-                // auto logout if 401 response returned from api
-                logout();
+const getCurrentUser = async (): Promise<BaseResult<AuthenticationResponse>> => {
+    return await api.get<BaseResult<AuthenticationResponse>>('api/Authentication/current')
+        .then((response) => {
+            if (response.data.success) {
+                return response.data;
+            } else {
+                return Promise.reject(response.data.message);
             }
-
-            const error = (data && data.message) || response.statusText;
-            return Promise.reject(error);
-        }
-        return data;
-    });
+        });
 }
 
 const logout = () => {
     // remove user from local storage to log user out
-    localStorage.removeItem('react_token');
+    localStorage.removeItem(LOCAL_STORAGE.TOKEN);
 }
 
-export const authenticationService = { 
+export const authenticationService = {
     login,
     logout
 }
