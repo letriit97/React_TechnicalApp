@@ -1,12 +1,7 @@
 import accountReducer from './account/reducers';
+import financialFundReducer from './financial_fund/financial_fund_reducers';
 import {
-    persistReducer,
-    FLUSH,
-    PAUSE,
-    PERSIST,
-    PURGE,
-    REGISTER,
-    REHYDRATE,
+    persistReducer
 } from 'redux-persist';
 
 import storage from 'redux-persist/lib/storage'; // defaults to localStorage for web
@@ -17,15 +12,17 @@ const persistConfig = {
     key: "root",
     version: 1,
     storage,
-    whitelist: ['account'], // Add reducers you want to persist here
+    whitelist: [
+        'account',
+        'financialFund'
+    ], // Add reducers you want to persist here
 };
-const reduxPersistActions = [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER, "account/logout"];
 
 // Combine your reducers 
 const reducer = combineReducers({
     account: accountReducer,
     // Add other reducers heremiddleware: (getDefaultMiddleware) =>
-
+    financialFund: financialFundReducer,
 });
 
 // Create a persisted reducer
@@ -33,11 +30,11 @@ const persistedReducer = persistReducer(persistConfig, reducer);
 
 // Configure the store
 
-export const reduxStore = configureStore({
-    reducer: {
-        account: accountReducer,
-    }
-});
+// export const reduxStore = configureStore({
+//     reducer: {
+//         account: accountReducer,
+//     }
+// });
 
 export const store = configureStore({
     reducer: persistedReducer,
@@ -50,6 +47,6 @@ export const store = configureStore({
 });
 
 // Define the AppState and AppDispatch types
-export type AppState = ReturnType<typeof reduxStore.getState>;
-export type AppDispatch = typeof reduxStore.dispatch;
-export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppState, unknown, Action<string>>;
+export type AppState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+export type AppThunk<ReturnType = void> = ThunkAction<ReturnType, AppState, unknown, Action<any>>;

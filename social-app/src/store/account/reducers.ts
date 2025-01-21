@@ -2,7 +2,7 @@ import { createSlice, PayloadAction,createAsyncThunk } from "@reduxjs/toolkit";
 import { AccountState } from "./types";
 import { AuthenticationResponse, LoginRequest } from "../../models/authentication/Authentication";
 import { authenticationService } from "../../services/authentication.service";
-import { history } from "../../helpers"
+import { history, LOCAL_STORAGE } from "../../helpers"
 
 
 // 1. Init state
@@ -25,7 +25,7 @@ export const fetch_Login = createAsyncThunk('account/login', async (model: Login
 export const fetch_Logout = createAsyncThunk('account/logout', async () => {
     return function logout() {
         // remove user from local storage to log user out
-        localStorage.removeItem('react_token');
+        localStorage.removeItem(LOCAL_STORAGE.TOKEN);
     }
 });
 

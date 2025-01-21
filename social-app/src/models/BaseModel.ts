@@ -6,6 +6,33 @@ export interface BaseResult<T> {
     result: T;
 }
 
+// ------------------- PAGINATION -------------------
+export interface PaginationUtility<T> {
+    pagination: PaginationResult;
+    result: T[];
+}
+
+export interface PaginationResult {
+    totalCount: number;
+    totalPage: number;
+    pageNumber: number;
+    pageSize: number;
+    skip: number;
+}
+
+export interface PaginationParam {
+    pageNumber: number;
+    pageSize: number;
+}
+
+export interface KeyValuePair {
+    key: any;
+    value: any;
+    optional?: any;
+}
+
+// ===================GUID===================
+
 export interface BaseGuid {
     id: string;
 }
